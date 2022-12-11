@@ -1,0 +1,20 @@
+.cart-wrapper {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 80px;
+	width: 80px;
+	background: black;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: POINTER;
+}
+.cart-wrapper span {
+	height: 2px;
+	width: 50%;
+	background-color: white;
+	margin: 0.2rem 0;
+	border-radius: 5%;
+}
