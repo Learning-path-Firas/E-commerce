@@ -1,5 +1,6 @@
-import React, { FC, useEffect, useState } from "react";
-import { data } from "../../static/products.json";
+import React, { FC, useContext, useEffect, useState } from "react";
+import { FiltersContext } from "../../contexts/filters_context";
+
 import Product from "../products/product";
 import { IProduct } from "./product/product";
 
@@ -19,16 +20,8 @@ const withHigherOrderComponent = (Component: any) => (props: Iproducts) => {
 };
 
 const Products = () => {
-	const [products, setProducts] = useState([]);
-	const [isloading, setIsloading] = useState(false);
+	const { products, isloading } = useContext(FiltersContext);
 
-	useEffect(() => {
-		setIsloading(!isloading);
-		setTimeout(() => {
-			setProducts(data.data_products);
-			setIsloading(!isloading);
-		}, 1000);
-	}, [products]);
 	return (
 		<>
 			<TodoList data={products} isloading={isloading} />
