@@ -7,7 +7,8 @@ import {
 	CardMedia,
 	Typography,
 } from "@mui/material";
-
+import { useContext } from "react";
+import { CartContext } from "../../../contexts/cart-context";
 export interface IProduct {
 	id: number;
 	sku: string;
@@ -27,6 +28,8 @@ export const formatRendering = (number: number) => {
 	return rendered;
 };
 function Product({ item }: any) {
+	const { add_to_cart, cart } = useContext(CartContext);
+	console.log(cart);
 	return (
 		<Card sx={{ maxWidth: 345 }}>
 			<CardActionArea>
@@ -46,7 +49,14 @@ function Product({ item }: any) {
 				</CardContent>
 			</CardActionArea>
 			<CardActions>
-				<Button size="small" color="primary">
+				<Button
+					size="small"
+					color="primary"
+					onClick={() => {
+						// open_cart();
+						add_to_cart(item);
+					}}
+				>
 					Add to cart
 				</Button>
 			</CardActions>
