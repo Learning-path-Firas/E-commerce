@@ -1,5 +1,9 @@
 import React from "react";
 
-export const Cart_item = () => {
-	return <div>Cart_item</div>;
+export const Cart_item = ({ cart }) => {
+	return (
+		<p>
+			{cart.title}  /  quantity : {cart.quantity}
+		</p>
+	);
 };

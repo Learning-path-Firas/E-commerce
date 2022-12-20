@@ -19,6 +19,8 @@
 	border-radius: 5%;
 }
 .cart-content {
+	display: flex;
+	flex-direction: column;
 	position: absolute;
 	right: 0;
 	top: 80px;
@@ -29,5 +31,5 @@
 	display: flex;
 }
 .cart-content button {
-	margin: auto auto 10px ;
+	margin: auto auto 10px;
 }

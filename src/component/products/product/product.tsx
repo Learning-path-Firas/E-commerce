@@ -28,8 +28,10 @@ export const formatRendering = (number: number) => {
 	return rendered;
 };
 function Product({ item }: any) {
-	const { add_to_cart, cart } = useContext(CartContext);
-	console.log(cart);
+	const { open_cart, add_to_cart, cart } = useContext(CartContext);
+	const addToCart = () => {
+		add_to_cart(item);
+	};
 	return (
 		<Card sx={{ maxWidth: 345 }}>
 			<CardActionArea>
@@ -46,6 +48,9 @@ function Product({ item }: any) {
 							return <span key={index}>{formatRendering(index) + size}</span>;
 						})}
 					</Typography>
+					<Typography variant="body2" color="text.secondary">
+						Quantity :{item.price}
+					</Typography>
 				</CardContent>
 			</CardActionArea>
 			<CardActions>
@@ -53,8 +58,8 @@ function Product({ item }: any) {
 					size="small"
 					color="primary"
 					onClick={() => {
-						// open_cart();
-						add_to_cart(item);
+						open_cart();
+						addToCart();
 					}}
 				>
 					Add to cart

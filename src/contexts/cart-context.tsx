@@ -1,11 +1,31 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
+import cart from "../component/cart";
+import product from "../component/products/product";
 
-let cart = {
+let context = {
 	isCartOpen: false,
 	cart: [],
+	total: 0,
+	nbrOfItems: 0,
 };
 
-const CartContext = createContext(cart);
+const addCartItem = (cartItems, productToAdd) => {
+	const existingCartItem = cartItems.find(
+		(cartItem) => cartItem.id === productToAdd.id,
+	);
+
+	if (existingCartItem) {
+		return cartItems.map((cartItem) =>
+			cartItem.id === productToAdd.id
+				? { ...cartItem, quantity: cartItem.quantity + 1 }
+				: cartItem,
+		);
+	}
+
+	return [...cartItems, { ...productToAdd, quantity: 1 }];
+};
+
+const CartContext = createContext(null);
 const reducer = (state, action) => {
 	const { type, payload } = action;
 
@@ -13,24 +33,26 @@ const reducer = (state, action) => {
 		case "open":
 			return { ...state, isCartOpen: payload.isCartOpen };
 		case "add":
-			return { ...state, cart: payload.cart };
+			return { ...state, cart: [...payload.cart] };
+		case "total":
+			return { ...state, total:  payload.total };
 	}
 };
-function containsObject(obj: {}, list: any) {
-	var x;
-	for (x in obj) {
-		if (list.title === x.title) {
-			return true;
-		}
-	}
 
-	return false;
-}
 const CartContextProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(reducer, cart);
+	const [state, dispatch] = useReducer(reducer, context);
+
+	useEffect(() => {
+		dispatch({
+			type: "total",
+			payload: {
+				total: get_total(state.cart),
+			},
+		});
+	}, [state.cart]);
 
 	const open_cart = () => {
-		dispatch({
+		return dispatch({
 			type: "open",
 			payload: {
 				isCartOpen: true,
@@ -39,18 +61,7 @@ const CartContextProvider = ({ children }) => {
 	};
 
 	const add_to_cart = (product) => {
-		let updatedCart;
-		if (!containsObject(cart, product)) {
-			updatedCart = [...cart.cart, { ...product, quantity: 1 }];
-		}
-		if (containsObject(cart, product)) {
-			console.log("already exists");
-			updatedCart = [
-				...cart.cart,
-				{ ...product, quatity: product.quantity + 1 },
-			];
-		}
-		console.log(updatedCart);
+		let updatedCart = addCartItem(state.cart, product);
 		dispatch({
 			type: "add",
 			payload: {
@@ -59,11 +70,22 @@ const CartContextProvider = ({ children }) => {
 		});
 	};
 
+	const get_total = (array) => {
+		let total = array.reduce(
+			(total, item) => total + item.quantity * item.price,
+			0,
+		);
+
+		return total;
+	};
+
 	const value = {
 		isCartOpen: state.isCartOpen,
 		cart: state.cart,
 		open_cart,
 		add_to_cart,
+		get_total,
+		total: state.total,
 	};
 	return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
